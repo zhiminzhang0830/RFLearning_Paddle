@@ -16,6 +16,7 @@ import os
 from paddle.io import Dataset
 import lmdb
 import cv2
+import random
 
 from .imaug import transform, create_operators
 
@@ -31,6 +32,13 @@ class LMDBDataSet(Dataset):
         data_dir = dataset_config['data_dir']
         self.do_shuffle = loader_config['shuffle']
 
+        ratio_list = dataset_config.get("ratio_list", [1.0])
+        self.need_reset = True in [x < 1 for x in ratio_list]
+        label_names = dataset_config.get('label_names', None)
+        assert label_names is None or len(ratio_list) == len(label_names)
+        self.ratio_list = ratio_list
+        self.label_names = label_names 
+
         self.lmdb_sets = self.load_hierarchical_lmdb_dataset(data_dir)
         logger.info("Initialize indexs of datasets:%s" % data_dir)
         self.data_idx_order_list = self.dataset_traversal()
@@ -39,9 +47,6 @@ class LMDBDataSet(Dataset):
         self.ops = create_operators(dataset_config['transforms'], global_config)
         self.ext_op_transform_idx = dataset_config.get("ext_op_transform_idx",
                                                        2)
-
-        ratio_list = dataset_config.get("ratio_list", [1.0])
-        self.need_reset = True in [x < 1 for x in ratio_list]
 
     def load_hierarchical_lmdb_dataset(self, data_dir):
         lmdb_sets = {}
@@ -61,20 +66,33 @@ class LMDBDataSet(Dataset):
                     "txn":txn, "num_samples":num_samples}
                 dataset_idx += 1
         return lmdb_sets
+    
+    def get_ratio(self, dirpath):
+        if self.label_names is not None:
+            for label_name, ratio in zip(self.label_names, self.ratio_list):
+                if label_name in dirpath:
+                    return ratio
+        return 1.0
 
     def dataset_traversal(self):
         lmdb_num = len(self.lmdb_sets)
         total_sample_num = 0
         for lno in range(lmdb_num):
-            total_sample_num += self.lmdb_sets[lno]['num_samples']
+            ratio = self.get_ratio(self.lmdb_sets[lno]['dirpath'])
+            total_sample_num += int(self.lmdb_sets[lno]['num_samples'] * ratio)
+
         data_idx_order_list = np.zeros((total_sample_num, 2))
         beg_idx = 0
         for lno in range(lmdb_num):
-            tmp_sample_num = self.lmdb_sets[lno]['num_samples']
+            ratio = self.get_ratio(self.lmdb_sets[lno]['dirpath'])
+            tmp_sample_num = int(self.lmdb_sets[lno]['num_samples'] * ratio)
+            tmp_sample_idx = list(range(self.lmdb_sets[lno]['num_samples']))
+            random.shuffle(tmp_sample_idx)
+
             end_idx = beg_idx + tmp_sample_num
             data_idx_order_list[beg_idx:end_idx, 0] = lno
             data_idx_order_list[beg_idx:end_idx, 1] \
-                = list(range(tmp_sample_num))
+                = tmp_sample_idx[:tmp_sample_num]
             data_idx_order_list[beg_idx:end_idx, 1] += 1
             beg_idx = beg_idx + tmp_sample_num
         return data_idx_order_list

@@ -151,6 +151,36 @@ class RecResizeImg(object):
         data['valid_ratio'] = valid_ratio
         return data
 
+class RFLRecResizeImg(object):
+    def __init__(self,
+                 image_shape,
+                 padding=True,
+                 interpolation=1,
+                 **kwargs):
+        self.image_shape = image_shape
+        self.padding = padding
+
+        
+        self.interpolation = interpolation
+        if self.interpolation == 0:
+            self.interpolation = cv2.INTER_NEAREST
+        elif self.interpolation == 1:
+            self.interpolation = cv2.INTER_LINEAR
+        elif self.interpolation == 2:
+            self.interpolation = cv2.INTER_CUBIC
+        elif self.interpolation == 3:
+            self.interpolation = cv2.INTER_AREA
+        else:
+            raise Exception("Unsupported interpolation type !!!")
+
+    def __call__(self, data):
+        img = data['image']
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        norm_img, valid_ratio = resize_norm_img(img, self.image_shape,
+                                                    self.padding, self.interpolation)
+        data['image'] = norm_img
+        data['valid_ratio'] = valid_ratio
+        return data
 
 class SRNRecResizeImg(object):
     def __init__(self, image_shape, num_heads, max_text_length, **kwargs):
@@ -242,13 +272,13 @@ def resize_norm_img_sar(img, image_shape, width_downsample_ratio=0.25):
     return padding_im, resize_shape, pad_shape, valid_ratio
 
 
-def resize_norm_img(img, image_shape, padding=True):
+def resize_norm_img(img, image_shape, padding=True, interpolation=cv2.INTER_LINEAR):
     imgC, imgH, imgW = image_shape
     h = img.shape[0]
     w = img.shape[1]
     if not padding:
         resized_image = cv2.resize(
-            img, (imgW, imgH), interpolation=cv2.INTER_LINEAR)
+            img, (imgW, imgH), interpolation=interpolation)
         resized_w = imgW
     else:
         ratio = w / float(h)

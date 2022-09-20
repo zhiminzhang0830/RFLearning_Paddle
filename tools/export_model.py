@@ -86,6 +86,8 @@ def export_single_model(model, arch_config, save_path, logger, quanter=None):
                 infer_shape[-1] = 100
             if arch_config["algorithm"] == "NRTR":
                 infer_shape = [1, 32, 100]
+            elif arch_config["algorithm"] == "RFL":
+                infer_shape = [1, 32, 100]
         elif arch_config["model_type"] == "table":
             infer_shape = [3, 488, 488]
         model = to_static(

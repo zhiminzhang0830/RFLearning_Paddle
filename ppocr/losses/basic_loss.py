@@ -22,11 +22,12 @@ from paddle.nn import SmoothL1Loss
 
 
 class CELoss(nn.Layer):
-    def __init__(self, epsilon=None):
+    def __init__(self, epsilon=None, ignore_index=-100):
         super().__init__()
         if epsilon is not None and (epsilon <= 0 or epsilon >= 1):
             epsilon = None
         self.epsilon = epsilon
+        self.ignore_index = ignore_index
 
     def _labelsmoothing(self, target, class_num):
         if target.shape[-1] != class_num:
@@ -50,7 +51,7 @@ class CELoss(nn.Layer):
                 soft_label = True
             else:
                 soft_label = False
-            loss = F.cross_entropy(x, label=label, soft_label=soft_label)
+            loss = F.cross_entropy(x, label=label, soft_label=soft_label, ignore_index=self.ignore_index)
         return loss
 
 
