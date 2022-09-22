@@ -71,18 +71,6 @@ Hui Jiang, Yunlu Xu, Zhanzhan Cheng, Shiliang Pu, Yi Niu, Wenqi Ren, Fei Wu, and
 	<tr>
     <tr>
         <td><center> CNT(PyTorch)</center></td>
-        <td><center> 96.5 </center></td>
-        <td><center> 95.8 </center></td>
-        <td><center> 96.9 </center></td>
-        <td><center> 96.6 </center></td>
-        <td><center> 89.7 </center></td>
-        <td><center> 89.3 </center></td>
-        <td><center> 91.0 </center></td>
-        <td><center> 93.68 </center></td>
-        <td><center> - </center></td>
-	<tr>
-    <tr>
-        <td><center> CNT(Paddle)</center></td>
         <td><center> 96.0 </center></td>
         <td><center> 94.7 </center></td>
         <td><center> 96.2 </center></td>
@@ -91,6 +79,18 @@ Hui Jiang, Yunlu Xu, Zhanzhan Cheng, Shiliang Pu, Yi Niu, Wenqi Ren, Fei Wu, and
         <td><center> 86.7 </center></td>
         <td><center> 88.2 </center></td>
         <td><center> 92.34 </center></td>
+        <td><center> - </center></td>
+	<tr>
+    <tr>
+        <td><center> CNT(Paddle)</center></td>
+        <td><center> 96.5 </center></td>
+        <td><center> 95.8 </center></td>
+        <td><center> 96.9 </center></td>
+        <td><center> 96.6 </center></td>
+        <td><center> 89.7 </center></td>
+        <td><center> 89.3 </center></td>
+        <td><center> 91.0 </center></td>
+        <td><center> 93.68 </center></td>
         <td><center><p><a href="configs/rec/rec_resnet_rfl_visual.yml"> Config </a></p></center></td>
 	<tr>
     <tr>
