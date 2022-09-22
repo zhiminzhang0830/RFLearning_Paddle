@@ -164,7 +164,8 @@ Hui Jiang, Yunlu Xu, Zhanzhan Cheng, Shiliang Pu, Yi Niu, Wenqi Ren, Fei Wu, and
             -o Train.loader.batch_size_per_card=64 \
             Train.dataset.data_dir=./data/rfl_dataset2/training \
             Eval.dataset.data_dir=./data/rfl_dataset2/evaluation \
-            Global.save_model_dir=./output/rec_resnet_rfl_att/ 
+            Global.save_model_dir=./output/rec_resnet_rfl_att/ \
+            Global.pretrained_model= your pretrained model
 
   * **模型验证-Att分支:**
 
