@@ -39,11 +39,11 @@ infer_export:tools/export_model.py -c test_tipc/configs/rec_resnet_rfl/rec_resne
 infer_quant:False
 inference:tools/infer/predict_rec.py --rec_image_shape="1,32,100" --rec_algorithm="RFL" --min_subgraph_size=5
 --use_gpu:True|False
---enable_mkldnn:True|False
---cpu_threads:1|6
---rec_batch_num:1|6
+--enable_mkldnn:False
+--cpu_threads:6
+--rec_batch_num:1
 --use_tensorrt:False
---precision:fp32|int8
+--precision:fp32
 --rec_model_dir:
 --image_dir:./inference/rec_inference
 --save_log_path:./test/output/
