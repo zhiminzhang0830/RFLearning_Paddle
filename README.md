@@ -181,7 +181,7 @@ Hui Jiang, Yunlu Xu, Zhanzhan Cheng, Shiliang Pu, Yi Niu, Wenqi Ren, Fei Wu, and
 
         # 导出模型
         python tools/export_model.py -c configs/rec/rec_resnet_rfl_att.yml \
-                  -o Global.pretrained_model= ./output/rec_resnet_rfl_att/best_accuracy.pdparams \
+                  -o Global.pretrained_model=./output/rec_resnet_rfl_att/best_accuracy.pdparams \
                   Global.save_inference_dir=./output/rec_resnet_rfl_att/
         
         # 模型推理
